@@ -1,3 +1,6 @@
+"""
+advent of code day 5 challenge number 1
+"""
 # day 5 challenge 1
 #
 #The first 7 characters will either be F or B; these specify exactly one of the 128
@@ -31,6 +34,9 @@ FILE_NAME = "day5_input.txt"
 #
 ###################################
 def main():
+    """
+    main module
+    """
     with  open(FILE_NAME, 'r') as reader:
         all_lines = reader.read().splitlines()
     reader.close
