@@ -138,7 +138,7 @@ def heightcheck(valtocheck, dictkey):
 # pass in the string to check, the dictionary of the check values, the key to get there (i.e. hcl)
 ######
 def haircheck(valtocheck, dictkey):
-    if len(valtocheck)>0: #mildly defensive...
+    if len(valtocheck) > 0: #mildly defensive...
         first_char = valtocheck[0]
         val_without_zero = valtocheck[1:]
     val_length = len(val_without_zero)
@@ -148,11 +148,41 @@ def haircheck(valtocheck, dictkey):
     else:
         return False
 
-#######
+
+######
+# eye check
+# function to check if a value is within range
+# pass in the string to check, the dictionary of the check values, the key to get there (i.e. ecl)
+######
+def eyecheck(valtocheck, dictkey):
+    if valtocheck in PP_VALIDATION[dictkey]: #mildly defensive...
+        # since they are set to true.
+        return PP_VALIDATION[dictkey][valtocheck]
+    else:
+        return False
+
+######
+# passport check
+# function to check if a value is within range
+# pass in the string to check, the dictionary of the check values, the key to get there (i.e. pid)
+######
+def passportcheck(valtocheck, dictkey):
+    if len(valtocheck) > 0: #mildly defensive...
+        val_length = len(valtocheck)
+        allowed_set = set(PP_VALIDATION[dictkey]['validchars'])
+        if val_length == PP_VALIDATION[dictkey]['strlen'] and set(valtocheck).issubset(allowed_set):
+            return True
+        else:
+            return False
+    else:
+        return False
+
+
+##################################
 #
 #  main
 #
-#######
+###################################
 def main():
     number_bad = 0
     number_good = 0
@@ -209,11 +239,9 @@ def main():
                     this_good_item = haircheck(results[afield], afield)
                     #validation hcl
                 elif afield == 'ecl':
-                    print(results[afield])
-                    #validation ecl
+                    this_good_item = eyecheck(results[afield], afield)
                 elif afield == 'pid':
-                    print(results[afield])
-                    #validate pid
+                    this_good_item = passportcheck(results[afield], afield)
             # if we got a validation failure, set item bad and break out of
             # the for afield loop
             if this_good_item == False:
