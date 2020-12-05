@@ -48,11 +48,8 @@ dict_item = {'hairchar':'#', 'validchars':'abcdef0123456789','strlen':6 }
 pp_validation ['hcl']=dict_item
 dict_item = {'ecl':True,'eye':True,'amb':True,'blu':True,'brn':True,'gry':True, 'grn':True, 'hzl':True, 'oth':True } # list the valid items that will return true on a lookup?
 pp_validation ['ecl']=dict_item
-dict_item = {'validchars':'0123456789','strlen':6 }
-pp_validation ['hcl']=dict_item
-
-
-#['pid', 'nine_num','0123456789'] ]
+dict_item = {'validchars':'0123456789','strlen':9 }
+pp_validation ['pid']=dict_item
 
 file_name="day4_input.txt"
 key_val_delim=":"
@@ -98,6 +95,18 @@ def parseitems(itemstring, kv_delim, item_delim):
 ##  end function parseitems
 #############
 
+######
+# min max check
+# function to check if a value is within range
+######
+def minmaxcheck (valtocheck,minval,maxval):
+    valtocheckint=int(valtocheck)
+    if (valtocheckint >= minval) and (valtocheckint <= maxval):
+        return (True)
+    else:
+        return (False)
+
+
 with  open(file_name, 'r') as reader:
     all_lines=reader.read().splitlines()
 tot_lines = len(all_lines)-1
@@ -127,6 +136,27 @@ for current_rec in passport_recs:
     for afield in pp_fields:
         if not afield in current_rec:
             good_item = False
+        else: # it's a matching field, check the validation
+            if afield == 'byr': ### ===> STOP RIGHT HERE FOR NOW
+                result_check = minmaxcheck(results[afield],pp_validation[afield]['intmin'],pp_validation[afield]['intmax'])
+            elif afield == 'iyr':
+                print (results[afield])
+                #validation iyr
+            elif afield == 'eyr':
+                print (results[afield])
+                #validation eyr
+            elif afield == 'hgt':
+                print (results[afield])
+                #validation hgt
+            elif afield == 'hcl':
+                print (results[afield])
+                #validation hcl
+            elif afield == 'ecl':
+                print (results[afield])
+                #validation ecl
+            elif afield == 'pid':
+                print (results[afield])
+                #validate pid
 
     if good_item:
         number_good=number_good+1
