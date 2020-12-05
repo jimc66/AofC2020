@@ -34,13 +34,25 @@
 pp_fields =['byr','iyr','eyr','hgt','hcl','ecl','pid'] # 'cid' is optional so we'll totally ignore it
 #
 # a shot at getting the validation data in one spot - not sure that this really abstracts much
-pp_validation =[['byr','int_min_max',1920,2002],
-['iyr','int_min_max',2010,2020],
-['eyr','int_min_max',2020,2030],
-['hgt','numchar',150,193,'cm',59,76,'in'],
-['hcl','hair','#','0123456789abcdef'],
-['ecl','eye','amb','blu','brn','gry', 'grn', 'hzl', 'oth'],
-['pid', 'nine_num','0123456789'] ]
+pp_validation ={}
+dict_item = {'intmin':1920, 'intmax':2002}
+pp_validation ['byr']=dict_item
+dict_item = {'intmin':2010, 'intmax':2020}
+pp_validation ['iyr']=dict_item
+#test=pp_validation['iyr']
+dict_item = {'intmin':2020, 'intmax':2030}
+pp_validation ['eyr']=dict_item
+dict_item = {'cmmin':150, 'cmmax':193,'cmstr':'cm','inmin':59,'inmax':76,'instr':'in'}
+pp_validation ['hgt']=dict_item
+dict_item = {'hairchar':'#', 'validchars':'abcdef0123456789','strlen':6 }
+pp_validation ['hcl']=dict_item
+dict_item = {'ecl':True,'eye':True,'amb':True,'blu':True,'brn':True,'gry':True, 'grn':True, 'hzl':True, 'oth':True } # list the valid items that will return true on a lookup?
+pp_validation ['ecl']=dict_item
+dict_item = {'validchars':'0123456789','strlen':6 }
+pp_validation ['hcl']=dict_item
+
+
+#['pid', 'nine_num','0123456789'] ]
 
 file_name="day4_input.txt"
 key_val_delim=":"
