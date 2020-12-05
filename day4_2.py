@@ -70,7 +70,7 @@ ITEM_DELIM = " "
 # return value:
 # dictionary of key value pairs
 ############
-def parseitems(itemstring, kv_delim, ITEM_DELIM):
+def parseitems(itemstring, kv_delim, item_delimiter):
     # parse the items into a dictionary here
     #
     dictionary_items = {}
@@ -80,7 +80,7 @@ def parseitems(itemstring, kv_delim, ITEM_DELIM):
         first_separator = goodstring.find(kv_delim)
         if first_separator > 0: # there is an actual item
             key_string = goodstring[0:first_separator]
-            end_of_value = goodstring.find(ITEM_DELIM)
+            end_of_value = goodstring.find(item_delimiter)
             if end_of_value > first_separator: # we actually found a separator char
                 value_string = goodstring[first_separator+1:end_of_value]
                 goodstring = goodstring[end_of_value:]
@@ -89,7 +89,7 @@ def parseitems(itemstring, kv_delim, ITEM_DELIM):
                 #the whole rest of the line (which might be nothing)
                 goodstring = "" #we just took the rest of the line
             dictionary_items[key_string] = value_string
-    return (dictionary_items)
+    return dictionary_items
 #############
 ##  end function parseitems
 #############
@@ -104,6 +104,50 @@ def minmaxcheck(valtocheck, minval, maxval):
         return True
     else:
         return False
+
+######
+# height check
+# function to check if a value is within range
+# pass in the string to check, the dictionary of the check values, the key to get there (i.e. hgt)
+######
+def heightcheck(valtocheck, dictkey):
+    cm_loc = valtocheck.find(PP_VALIDATION[dictkey]['cmstr'])
+    if cm_loc < 0: # try inches if no cm
+        inch_loc = valtocheck.find(PP_VALIDATION[dictkey]['instr'])
+        valtocheckstr = valtocheck[0:inch_loc]
+        valtocheckint = int(valtocheckstr)
+        minval = PP_VALIDATION[dictkey]['inmin']
+        maxval = PP_VALIDATION[dictkey]['inmax']
+    else: #it IS cm
+        valtocheckstr = valtocheck[0:cm_loc]
+        valtocheckint = int(valtocheckstr)
+        minval = PP_VALIDATION[dictkey]['cmmin']
+        maxval = PP_VALIDATION[dictkey]['cmmax']
+#    PP_VALIDATION[afield]['intmax']
+#    valtocheck_numberpart=
+#    valtocheckint = int(valtocheck)
+#    cmmin':150, 'cmmax':193, 'cmstr':'cm', 'inmin':59, 'inmax':76, 'instr':'in'
+    if (valtocheckint >= minval) and (valtocheckint <= maxval):
+        return True
+    else:
+        return False
+
+######
+# hair check
+# function to check if a value is within range
+# pass in the string to check, the dictionary of the check values, the key to get there (i.e. hcl)
+######
+def haircheck(valtocheck, dictkey):
+    if len(valtocheck)>0: #mildly defensive...
+        first_char = valtocheck[0]
+        val_without_zero = valtocheck[1:]
+    val_length = len(val_without_zero)
+    allowed_set = set(PP_VALIDATION[dictkey]['validchars'])
+    if (first_char == PP_VALIDATION[dictkey]['hairchar']) and (val_length == PP_VALIDATION[dictkey]['strlen']) and (set(val_without_zero).issubset(allowed_set)):
+        return True
+    else:
+        return False
+
 #######
 #
 #  main
@@ -131,8 +175,8 @@ def main():
             else: #the prior iteration was a blank, add a new record
                 passport_recs.append(line + ITEM_DELIM)
                 passport_rec_num = passport_rec_num+1
-            same_line = True # since you just read data, assume you need to stay on the same passport_rec 
-                            #for the next iteration
+            same_line = True # since you just read data, assume you need to stay on the same
+                            #passport_rec for the next iteration
         else:
             same_line = False
         current_line = current_line+1
@@ -146,22 +190,23 @@ def main():
             if not afield in current_rec:
                 good_item = False
             else: # it's a matching field, check the validation
+                this_good_item = False #start  with assuming a problem?
                 # if any of the validation fails, set good_item to false
                 # if it makes it all the way through then it stays "good"
-                if afield == 'byr': ### ===> STOP RIGHT HERE FOR NOW
-                    good_item = minmaxcheck(results[afield], PP_VALIDATION[afield]['intmin'], 
-                                               PP_VALIDATION[afield]['intmax'])
+                if afield == 'byr':
+                    this_good_item = minmaxcheck(results[afield], PP_VALIDATION[afield]['intmin'],
+                                                 PP_VALIDATION[afield]['intmax'])
                 elif afield == 'iyr':
-                    good_item = minmaxcheck(results[afield], PP_VALIDATION[afield]['intmin'], 
-                                               PP_VALIDATION[afield]['intmax'])
+                    this_good_item = minmaxcheck(results[afield], PP_VALIDATION[afield]['intmin'],
+                                                 PP_VALIDATION[afield]['intmax'])
                 elif afield == 'eyr':
-                    good_item = minmaxcheck(results[afield], PP_VALIDATION[afield]['intmin'], 
-                                               PP_VALIDATION[afield]['intmax'])
+                    this_good_item = minmaxcheck(results[afield], PP_VALIDATION[afield]['intmin'],
+                                                 PP_VALIDATION[afield]['intmax'])
                 elif afield == 'hgt':
-                    print(results[afield])
+                    this_good_item = heightcheck(results[afield], afield)
                     #validation hgt
                 elif afield == 'hcl':
-                    print(results[afield])
+                    this_good_item = haircheck(results[afield], afield)
                     #validation hcl
                 elif afield == 'ecl':
                     print(results[afield])
@@ -169,6 +214,12 @@ def main():
                 elif afield == 'pid':
                     print(results[afield])
                     #validate pid
+            # if we got a validation failure, set item bad and break out of
+            # the for afield loop
+            if this_good_item == False:
+                good_item = False
+                break
+
 
         if good_item:
             number_good = number_good+1
@@ -177,7 +228,7 @@ def main():
 
 
 
-    msg = "good passports " + str(number_good)  
+    msg = "good passports " + str(number_good)
     print(msg)
 
 #call the main function
