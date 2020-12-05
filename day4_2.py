@@ -146,15 +146,17 @@ def main():
             if not afield in current_rec:
                 good_item = False
             else: # it's a matching field, check the validation
+                # if any of the validation fails, set good_item to false
+                # if it makes it all the way through then it stays "good"
                 if afield == 'byr': ### ===> STOP RIGHT HERE FOR NOW
-                    result_check = minmaxcheck(results[afield], PP_VALIDATION[afield]['intmin'], 
+                    good_item = minmaxcheck(results[afield], PP_VALIDATION[afield]['intmin'], 
                                                PP_VALIDATION[afield]['intmax'])
                 elif afield == 'iyr':
-                    print(results[afield])
-                    #validation iyr
+                    good_item = minmaxcheck(results[afield], PP_VALIDATION[afield]['intmin'], 
+                                               PP_VALIDATION[afield]['intmax'])
                 elif afield == 'eyr':
-                    print(results[afield])
-                    #validation eyr
+                    good_item = minmaxcheck(results[afield], PP_VALIDATION[afield]['intmin'], 
+                                               PP_VALIDATION[afield]['intmax'])
                 elif afield == 'hgt':
                     print(results[afield])
                     #validation hgt
