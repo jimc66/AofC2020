@@ -132,7 +132,21 @@ def heightcheck(valtocheck, dictkey):
     else:
         return False
 
-
+######
+# hair check
+# function to check if a value is within range
+# pass in the string to check, the dictionary of the check values, the key to get there (i.e. hcl)
+######
+def haircheck(valtocheck, dictkey):
+    if len(valtocheck)>0: #mildly defensive...
+        first_char = valtocheck[0]
+        val_without_zero = valtocheck[1:]
+    val_length = len(val_without_zero)
+    allowed_set = set(PP_VALIDATION[dictkey]['validchars'])
+    if (first_char == PP_VALIDATION[dictkey]['hairchar']) and (val_length == PP_VALIDATION[dictkey]['strlen']) and (set(val_without_zero).issubset(allowed_set)):
+        return True
+    else:
+        return False
 
 #######
 #
@@ -161,8 +175,8 @@ def main():
             else: #the prior iteration was a blank, add a new record
                 passport_recs.append(line + ITEM_DELIM)
                 passport_rec_num = passport_rec_num+1
-            same_line = True # since you just read data, assume you need to stay on the same passport_rec
-                            #for the next iteration
+            same_line = True # since you just read data, assume you need to stay on the same
+                            #passport_rec for the next iteration
         else:
             same_line = False
         current_line = current_line+1
@@ -179,7 +193,7 @@ def main():
                 this_good_item = False #start  with assuming a problem?
                 # if any of the validation fails, set good_item to false
                 # if it makes it all the way through then it stays "good"
-                if afield == 'byr': 
+                if afield == 'byr':
                     this_good_item = minmaxcheck(results[afield], PP_VALIDATION[afield]['intmin'],
                                                  PP_VALIDATION[afield]['intmax'])
                 elif afield == 'iyr':
@@ -192,7 +206,7 @@ def main():
                     this_good_item = heightcheck(results[afield], afield)
                     #validation hgt
                 elif afield == 'hcl':
-                    print(results[afield])
+                    this_good_item = haircheck(results[afield], afield)
                     #validation hcl
                 elif afield == 'ecl':
                     print(results[afield])
@@ -200,9 +214,9 @@ def main():
                 elif afield == 'pid':
                     print(results[afield])
                     #validate pid
-            # if we got a validation failure, set item bad and break out of 
+            # if we got a validation failure, set item bad and break out of
             # the for afield loop
-            if this_good_item == False: 
+            if this_good_item == False:
                 good_item = False
                 break
 
