@@ -45,7 +45,7 @@ def findloc(in_string, low, high, lowchar, highchar):
     for iteration in range(len(in_string)-1):
         delta = high_num - low_num + 1
         if in_string[iteration] == lowchar:
-            high_num = high_num - (delta / 2) #get one lower to be in the lower range
+            high_num = high_num - (delta / 2)
         elif in_string[iteration] == highchar:
             low_num = low_num + (delta / 2)
     if in_string[-1] == lowchar:
