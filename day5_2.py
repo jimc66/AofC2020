@@ -55,7 +55,7 @@ def findloc(in_string, low, high, lowchar, highchar):
     else:
         return -1
 
-def findseat (seatlist):
+def findseat(seatlist):
     """
     fineseat
     input seatlist is a list of numbers
@@ -69,8 +69,7 @@ def findseat (seatlist):
         if (seatlist[iterator]) + 2 == seatlist[iterator + 1]: #skips
             return seatlist[iterator]+1
         else:
-            iterator = iterator + 1
-            
+            iterator = iterator + 1            
     return -1
 
 
