@@ -13,7 +13,6 @@ to which anyone answered "yes". What is the sum of those counts?
 """
 
 # "Globals"
-
 FILE_NAME = "day6_input.txt"
 
 ######
@@ -23,26 +22,39 @@ FILE_NAME = "day6_input.txt"
 # params:
 # 
 ######
-def getentries(in_string):
+def parselines(the_lines):
     """
-    this is just a shell from the last one...
-    """
-    low_num = low #start at zero  ?
-    # there is some kind of math problem here... something around
-    high_num = high
-    for iteration in range(len(in_string)-1):
-        delta = high_num - low_num + 1
-        if in_string[iteration] == lowchar:
-            high_num = high_num - (delta / 2)
-        elif in_string[iteration] == highchar:
-            low_num = low_num + (delta / 2)
-    if in_string[-1] == lowchar:
-        return low_num
-    elif in_string[-1] == highchar:
-        return high_num
-    else:
-        return -1
+    getentries
 
+    read in all the lines
+    figure out the delimitter between groups
+    add each unique item per group to a dictionary
+    add the dictionary entries to a list
+    return that list of dictionary items that have the unique entries
+    """
+    dict_item = {}
+    list_of_dict_items = []
+    for line in the_lines:
+        #get all the multi-line stuff into a set of lines that we actually want to work with
+        if len(line)>0: # this line has data on it
+            for character in line:
+                dict_item[character] = True #add them in, don't care if it's overwritting
+        else: # when you get a blank line, add a new record and clear dict_item
+            list_of_dict_items.append(dict_item.copy()) # need a copy, not a reference
+            dict_item.clear()
+    list_of_dict_items.append(dict_item.copy()) # add the last item
+    return list_of_dict_items
+
+def sumentries(listofdictionaries):
+    """
+    sumentries
+
+    add total number of entries (using length)
+    """
+    grand_total = 0
+    for dictitem in listofdictionaries:
+        grand_total = grand_total + len(dictitem)
+    return grand_total
 
 def main():
     """
@@ -51,20 +63,10 @@ def main():
     with  open(FILE_NAME, 'r') as reader:
         all_lines = reader.read().splitlines()
     reader.close
-    all_group_entires = [] #for the list of all the groups
-    # loop through the lines
-    for line in all_lines:
-        #get all the multi-line stuff into a set of lines that we actually want to work with
-        if len(line) == ROW_CHARS + SEAT_CHARS: # this line has data on it
-            row = findloc(line[0:ROW_CHARS], 0, MAX_ROWS, ROW_LOW, ROW_HIGH)
-            seat = findloc(line[ROW_CHARS:ROW_CHARS+SEAT_CHARS], 0, MAX_SEATS, SEAT_LOW, SEAT_HIGH)
-            seat_id = (row * 8) + seat
-            all_bording_passes.append(seat_id) #add the seat id / boarding pass to the list
-            if seat_id > high_seat_id:
-                high_seat_id = seat_id
-
-    my_seat = findseat(all_bording_passes) # so we can figure out which one is ours
-    msg = "my seat: " + str(my_seat)
+    all_group_entries = [] #for the list of all the groups
+    all_group_entries = parselines(all_lines)
+    total = sumentries(all_group_entries)
+    msg = "grand total: " + str(total)
     print(msg)
 
 #call the main function
