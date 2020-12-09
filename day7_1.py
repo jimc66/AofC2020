@@ -15,7 +15,7 @@ make sure you get all of it.)
 
 # "Globals"
 FILE_NAME = "day7_input.txt"
-FILE_NAME = "testinput_7.txt"
+#FILE_NAME = "testinput_7.txt"
 
 def removebag (bagstr):
     """
@@ -32,6 +32,26 @@ def removebag (bagstr):
         return bagstr[0:-5]
     return bagstr #found no match
 
+def findbag (bagdict, bagstr):
+    """
+    findbag
+
+    takes a nested dictionary (bagdict)
+    finds all the instances of the bag (bagstr)
+    returns a list of the bags that contain this bag (return_list)
+    """
+    return_list = []
+    top_level_key = ''
+    for key, value in bagdict.items():
+        top_level_key = key
+        if key == bagstr:
+            return_list.append(key)
+        elif isinstance(value, dict): #recursively call findbag
+            results = findbag (value,bagstr)
+            for result in results:
+                return_list.append(top_level_key) #return top key for embedded bag
+            #    return_list.append(result) 
+    return return_list #found no match
 
 def parsebags(listofbags):
     """
@@ -119,8 +139,18 @@ def main():
         all_lines = reader.read().splitlines()
     reader.close
     all_bag_entries = {} #for the dictionary of all bags
+    gold_ones = {}
     all_bag_entries = parsebags(all_lines)
-    print('hello')
+    gold_ones = findbag(all_bag_entries, 'shiny gold')
+    new_bags = []
+    for bag in gold_ones:
+        new_ones = findbag(all_bag_entries, bag)
+        for items in new_ones:
+            if not items in gold_ones:
+                gold_ones.append(items)
+    total_bags = len(gold_ones) -1 #subtract gold
+    msg = 'total bags: ' + str(total_bags)
+    print(msg)
 #    total = sumentries(all_group_entries)
 #    msg = "grand total: " + str(total)
 #    print(msg)
