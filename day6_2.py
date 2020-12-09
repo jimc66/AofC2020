@@ -16,13 +16,29 @@ to which anyone answered "yes". What is the sum of those counts?
 FILE_NAME = "day6_input.txt"
 #FILE_NAME = "testinput_6.txt"
 
-######
-# getentries
-# function to get the entries
-# 
-# params:
-# 
-######
+def sameitems(dictlist):
+    """
+    sameitems
+    takes as input a list of dictionary items (dictlist)
+    returns a single dictionary item (final_dict)
+    that contains only the the items that are on every 
+    list
+    """
+    checkloop=1
+    dictlistlen = len(dictlist)
+    final_dict = dictlist[0] #initial list is the "whole thing"
+#   final_final_dict = {}
+    while checkloop < dictlistlen:
+        final_final_set = final_dict.items() & dictlist[checkloop].items()
+        checkloop = checkloop + 1
+        # out dictionary is now a set - convert it back so we can do
+        # the next comparison
+        final_dict.clear() #clear and repopulate final_dict
+        for value in final_final_set: 
+            final_dict[value[0]] =value[1]
+    return final_dict
+
+
 def parselines(the_lines):
     """
     getentries
@@ -46,33 +62,15 @@ def parselines(the_lines):
             group_list.append(dict_item.copy())
             dict_item.clear()
         else: # when you get a blank line, add a new record and clear dict_item
-            checkloop=1
-            final_dict = group_list[0] #initial list is the "whole thing"
-            final_final_dict = {}
-            while checkloop < group_id:
-                final_final_set = final_dict.items() & group_list[checkloop].items()
-                #for item in final_dict:
-                #    if item in group_list[checkloop]:
-                #        final_final_dict[item] = final_dict[item]
-                checkloop = checkloop + 1
-                # out dictionary is now a set - convert it back
-                final_dict.clear()
-                for value in final_final_set: 
-                    final_dict[value[0]] =value[1]
-                #final_dict = final_final_dict.copy() # 
-                #final_final_dict = {}
-            
-#            list_of_dict_items.append(dict_item.copy()) # need a copy, not a reference next one I think is right
-            list_of_dict_items.append(final_dict.copy()) # need a copy, not a reference
-            dict_item.clear()
+            newdictitem = {}
+            newdictitem = sameitems(group_list)
+            list_of_dict_items.append(newdictitem.copy()) # need a copy, not a reference
             group_list.clear()
-            group_id = 0
-    # add the last item
-    final_dict.clear()
-    for value in final_final_set: 
-        final_dict[value[0]] =value[1]
-    list_of_dict_items.append(final_dict.copy()) # add the last item
+    newdictitem = {}
+    newdictitem = sameitems(group_list)
+    list_of_dict_items.append(newdictitem.copy()) # add the last item
     return list_of_dict_items
+
 
 def sumentries(listofdictionaries):
     """
