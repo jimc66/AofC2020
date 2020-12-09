@@ -1,5 +1,5 @@
 """
-advent of code day 6 challenge number 1
+advent of code day 6 challenge number 2
 
 The form asks a series of 26 yes-or-no questions marked a through z.
 All you need to do is identify the questions for which anyone in your
