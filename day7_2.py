@@ -17,6 +17,7 @@ make sure you get all of it.)
 FILE_NAME = "day7_input.txt"
 #FILE_NAME = "testinput_7.txt"
 
+
 def removebag(bagstr):
     """
     removebag
@@ -32,31 +33,33 @@ def removebag(bagstr):
         return bagstr[0:-5]
     return bagstr #found no match
 
+
 def bagcontents(bagdict, bagstr):
     """
     bagcontents
 
     takes a nested dictionary (bagdict)
     finds all the bags inside the bag (bagstr)
-    and counts them returns the bag count 
+    and counts them returns the bag count
     """
     return_value = 0
-    top_level_key = ''
+#    top_level_key = ''
     for key, value in bagdict.items():
-        top_level_key = key
+#        top_level_key = key
         if key == bagstr: # this is the matching bag
             inner_bag_dict = value
             if not 'empty' in inner_bag_dict: # empty is a key
             #let's now process what was in this bag
                 for innerkey, innervalue in inner_bag_dict.items():
-#                    return_value = innerkey
-                    if not (innerkey == 'total_items'): #not sure why we added total items to the dict
-                        additional_value = bagcontents(bagdict, innerkey) 
+                    #not sure why we added total items to the dict
+                    if not innerkey == 'total_items':
+                        additional_value = bagcontents(bagdict, innerkey)
                         if additional_value > 0:
-                            return_value = return_value + innervalue + (innervalue * additional_value) #multiply
+                            return_value = return_value + innervalue + (innervalue * additional_value)
                         else:
-                            return_value = return_value + innervalue  #add - don't add total_items innerkey
-    return return_value 
+                            return_value = return_value + innervalue
+    return return_value
+
 
 def parsebags(listofbags):
     """
@@ -91,6 +94,7 @@ def parsebags(listofbags):
                     bag_contents[top_level_bag]['empty'] = True #empty means nothing in it
     return bag_contents
 
+
 def main():
     """
     main module
@@ -110,6 +114,7 @@ def main():
 #    total_bags = len(gold_ones) -1 #subtract gold
     msg = 'total bags: ' + str(gold_ones)
     print(msg)
+
 
 #call the main function
 main()
