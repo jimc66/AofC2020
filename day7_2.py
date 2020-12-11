@@ -15,7 +15,7 @@ make sure you get all of it.)
 
 # "Globals"
 FILE_NAME = "day7_input.txt"
-FILE_NAME = "testinput_7.txt"
+#FILE_NAME = "testinput_7.txt"
 
 def removebag(bagstr):
     """
@@ -46,15 +46,16 @@ def bagcontents(bagdict, bagstr):
         top_level_key = key
         if key == bagstr: # this is the matching bag
             inner_bag_dict = value
-            if not 'empty' in inner_bag_dict: # this bag has bags in it
+            if not 'empty' in inner_bag_dict: # empty is a key
             #let's now process what was in this bag
                 for innerkey, innervalue in inner_bag_dict.items():
 #                    return_value = innerkey
-                    additional_value = bagcontents(bagdict, innerkey) 
-                    if additional_value > 0:
-                        return_value = return_value + (innervalue * additional_value) #multiply
-                    else:
-                        return_value = return_value + (innervalue + additional_value) #add
+                    if not (innerkey == 'total_items'): #not sure why we added total items to the dict
+                        additional_value = bagcontents(bagdict, innerkey) 
+                        if additional_value > 0:
+                            return_value = return_value + innervalue + (innervalue * additional_value) #multiply
+                        else:
+                            return_value = return_value + innervalue  #add - don't add total_items innerkey
     return return_value 
 
 def parsebags(listofbags):
