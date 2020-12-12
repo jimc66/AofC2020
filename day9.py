@@ -12,42 +12,62 @@ What is the first number that does not have this property?
 
 # "Globals"
 FILE_NAME = "day9_input.txt"
-#FILE_NAME = "testinput_8.txt"
+#from os import O_APPEND
+#FILE_NAME = "testinput_9.txt"
+PREAMBLE_LEN = 25
 
-def findbadinstruction(all_instruction_list):
+def checksum(list_int):
     """
-    findbadinstruction
-    takes the instruction list as input
-    iterates through the list changing 1 instruction list
-    one at a time (jmp --> nop) (nop --> jmp)
-    until you run through to the end of the list
+    checksum
+    see if any of the numbers in the list
+    when added together equal the last number
+    returns True if this is the case
+    False if no 2 numbers equal the last
+    """
+    return_value = False
+    target_sum = list_int[len(list_int)-1]
+    range_num = list(range(0,len(list_int)-1)) #since I +1
+    number_list = []
+    for num in range_num:
+        # create the list of values
+        number_list.append(list_int[num])
+    for first in range_num:
+        for second in range_num:
+            if not second == first:
+                if number_list[first] + number_list[second] == target_sum:
+                    return_value = True
+                    return return_value
+    return return_value
+        
 
-    returns the value of the accumulator (int)
-    and the changed instruction as an FYI (string)
+def findbadnum(all_number_list, len_preamble):
     """
-    modification_str = ''
-    current_instruction = 0
-    original_instruction = []
-    changed_instruction = []
-    last_instruction = len(all_instruction_list)
-    while current_instruction < last_instruction:
-        original_instruction = all_instruction_list[current_instruction][:]
-        changed_instruction = original_instruction[:] # double check: copy?
-        if original_instruction[0] == 'nop':
-            changed_instruction[0] = 'jmp'
-            all_instruction_list[current_instruction] = changed_instruction
-        elif original_instruction[0] == 'jmp':
-            changed_instruction[0] = 'nop'
-            all_instruction_list[current_instruction] = changed_instruction
-        instruction_return = [0, 0]
-        instruction_return = runinstructions(all_instruction_list)
-        all_instruction_list[current_instruction] = original_instruction[:] #change back
-        if instruction_return[1] == last_instruction: #made it to the end
-            modification_str = 'changed line ' + str(current_instruction)
-            return [instruction_return[0], modification_str]
-        current_instruction = current_instruction + 1
-    modification_str = 'error'
-    return [-1, modification_str]
+    findbadnum
+    takes the number list as input (list of integers)
+    iterates through the list starting AFTER the preamble
+    one at at time checks to see if the number is a sum of
+    2 numbers in the preceding (preamble) numbers
+
+    returns the the number that is not (int)
+    or a negative 1 if not found
+    """
+    current_item = len_preamble + 1
+    last_item = len(all_number_list) #maybe plus 1?
+    bad_num = -1
+    while current_item < last_item:
+    #    equal_num = False
+        range_of_nums = list(range(current_item - len_preamble -1,current_item))
+        number_list = []
+        for num in range_of_nums:
+            # create the list of values
+            number_list.append(all_number_list[num])
+        good_number = checksum(number_list)
+        if good_number == False:
+                bad_num = number_list[-1]
+                return bad_num #current iteration is the bad #
+        current_item = current_item + 1
+    return bad_num
+
 
 
 def runinstructions(all_instructions_list):
@@ -103,15 +123,14 @@ def main():
         all_lines = reader.read().splitlines()
     reader.close
     number_list = []
-#    acc_value = 0
-#    last_inst = 0
-    instruction_return = [0, 0]
     number_list = parselines(all_lines)
+    bad_number = findbadnum(number_list, PREAMBLE_LEN)
+
 #    instruction_return = runinstructions(boot_code)
 #    acc_value = instruction_return[0]
 #    instruction_return = findbadinstruction(boot_code)
-#    msg = 'Accumulator Value on early exit: ' + str(acc_value)
-#    print(msg)
+    msg = 'Abad number: ' + str(bad_number)
+    print(msg)
 #    msg = 'Accumulator value full run: ' + str(instruction_return[0])
 #    print(msg)
 #    print(instruction_return[1])
