@@ -40,30 +40,31 @@ def removebag(bagstr):
     return bagstr #found no match
 
 
-def bagcontents(bagdict, bagstr):
+def runinstructions(all_instructions_list):
     """
-    bagcontents
+    runinstructions
 
-    takes a nested dictionary (bagdict)
-    finds all the bags inside the bag (bagstr)
-    and counts them returns the bag count
+    takes a instruction list (all_instructions_list)
+    runs through them (acc, jmp, nop)
+    and returns the accumulator (int)
     """
     return_value = 0
-#    top_level_key = ''
-    for key, value in bagdict.items():
-#        top_level_key = key
-        if key == bagstr: # this is the matching bag
-            inner_bag_dict = value
-            if not 'empty' in inner_bag_dict: # empty is a key
-            #let's now process what was in this bag
-                for innerkey, innervalue in inner_bag_dict.items():
-                    #not sure why we added total items to the dict
-                    if not innerkey == 'total_items':
-                        additional_value = bagcontents(bagdict, innerkey)
-                        if additional_value > 0:
-                            return_value = return_value + innervalue + (innervalue * additional_value)
-                        else:
-                            return_value = return_value + innervalue
+    #initial instruction tracker-can only run once
+    instruction_tracker = [0] * len(all_instructions_list)
+    second_call = False #was an instruction called twice
+    current_instruction = 0
+    while not second_call:
+        if instruction_tracker[current_instruction] == 0: #first call
+            instruction_tracker[current_instruction] = 1 #its called
+            if all_instructions_list[current_instruction][0] == 'nop':
+                current_instruction = current_instruction + 1
+            elif all_instructions_list[current_instruction][0] == 'jmp':
+                current_instruction = current_instruction + all_instructions_list[current_instruction][1]
+            elif all_instructions_list[current_instruction][0] == 'acc':
+                return_value = return_value + all_instructions_list[current_instruction][1]
+                current_instruction = current_instruction + 1
+        else:
+            second_call = True
     return return_value
 
 
@@ -84,8 +85,8 @@ def parsecode(all_instructions):
             offset_str = splitter[1].strip()
             offset_int = int(offset_str)
             one_instruction = []
-            one_instruction[0] = instruction
-            one_instruction[1] = offset_int
+            one_instruction.append(instruction)
+            one_instruction.append(offset_int)
             all_instructions_list.append(one_instruction)
             current_instruction = current_instruction + 1
     return all_instructions_list
@@ -101,6 +102,7 @@ def main():
     boot_code = []
     acc_value = 0
     boot_code = parsecode(all_lines)
+    acc_value = runinstructions(boot_code)
 #    gold_ones = bagcontents(all_bag_entries, 'shiny gold')
 #    for bag in gold_ones:
 #        new_ones = findbag(all_bag_entries, bag)
