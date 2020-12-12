@@ -13,9 +13,15 @@ for example, jmp +2 would skip the next instruction, jmp +1
 nop stands for No OPeration - it does nothing. The instruction
 immediately below it is executed next.
 
+Part 1:
 Run your copy of the boot code.
 Immediately before any instruction is executed a second time,
 what value is in the accumulator?
+
+Part 2:
+Fix the program so that it terminates normally by changing exactly one
+jmp (to nop) or nop (to jmp). What is the value of the accumulator after
+the program terminates?
 
 """
 
@@ -23,21 +29,40 @@ what value is in the accumulator?
 FILE_NAME = "day8_input.txt"
 #FILE_NAME = "testinput_8.txt"
 
-
-def removebag(bagstr):
+def findbadinstruction(all_instruction_list):
     """
-    removebag
+    findbadinstruction
+    takes the instruction list as input
+    iterates through the list changing 1 instruction list
+    one at a time (jmp --> nop) (nop --> jmp)
+    until you run through to the end of the list
 
-    takes a string (bagstr)
-    removes the trailing
-    ' bag' or ' bags'
-    returns a string
+    returns the value of the accumulator (int)
+    and the changed instruction as an FYI (string)
     """
-    if bagstr[-4:] == ' bag':
-        return bagstr[0:-4]
-    if bagstr[-5:] == ' bags':
-        return bagstr[0:-5]
-    return bagstr #found no match
+    modification_str = ''
+    current_instruction = 0
+    original_instruction = []
+    changed_instruction = []
+    last_instruction = len(all_instruction_list)
+    while current_instruction < last_instruction:
+        original_instruction = all_instruction_list[current_instruction][:]
+        changed_instruction = original_instruction[:] # double check: copy?
+        if original_instruction[0] == 'nop':
+            changed_instruction[0] = 'jmp'
+            all_instruction_list[current_instruction] = changed_instruction
+        elif original_instruction[0] == 'jmp':
+            changed_instruction[0] = 'nop'
+            all_instruction_list[current_instruction] = changed_instruction
+        instruction_return = [0, 0]
+        instruction_return = runinstructions(all_instruction_list)
+        all_instruction_list[current_instruction] = original_instruction[:] #change back
+        if instruction_return[1] == last_instruction: #made it to the end
+            modification_str = 'changed line ' + str(current_instruction)
+            return [instruction_return[0], modification_str]
+        current_instruction = current_instruction + 1
+    modification_str = 'error'
+    return [-1, modification_str]
 
 
 def runinstructions(all_instructions_list):
@@ -46,14 +71,15 @@ def runinstructions(all_instructions_list):
 
     takes a instruction list (all_instructions_list)
     runs through them (acc, jmp, nop)
-    and returns the accumulator (int)
+    returns:
+        the accumulator value (int return value)
+        the last run instruction (int current_instruction)
     """
     return_value = 0
-    #initial instruction tracker-can only run once
     instruction_tracker = [0] * len(all_instructions_list)
     second_call = False #was an instruction called twice
     current_instruction = 0
-    while not second_call:
+    while not second_call and current_instruction < len(all_instructions_list):
         if instruction_tracker[current_instruction] == 0: #first call
             instruction_tracker[current_instruction] = 1 #its called
             if all_instructions_list[current_instruction][0] == 'nop':
@@ -65,7 +91,7 @@ def runinstructions(all_instructions_list):
                 current_instruction = current_instruction + 1
         else:
             second_call = True
-    return return_value
+    return [return_value, current_instruction]
 
 
 def parsecode(all_instructions):
@@ -101,17 +127,17 @@ def main():
     reader.close
     boot_code = []
     acc_value = 0
+#    last_inst = 0
+    instruction_return = [0, 0]
     boot_code = parsecode(all_lines)
-    acc_value = runinstructions(boot_code)
-#    gold_ones = bagcontents(all_bag_entries, 'shiny gold')
-#    for bag in gold_ones:
-#        new_ones = findbag(all_bag_entries, bag)
-#        for items in new_ones:
-#            if not items in gold_ones:
-#                gold_ones.append(items)
-#    total_bags = len(gold_ones) -1 #subtract gold
-    msg = 'Accumulator Value: ' + str(acc_value)
+    instruction_return = runinstructions(boot_code)
+    acc_value = instruction_return[0]
+    instruction_return = findbadinstruction(boot_code)
+    msg = 'Accumulator Value on early exit: ' + str(acc_value)
     print(msg)
+    msg = 'Accumulator value full run: ' + str(instruction_return[0])
+    print(msg)
+    print(instruction_return[1])
 
 
 #call the main function
