@@ -26,21 +26,20 @@ the program terminates?
 """
 
 # "Globals"
-#FILE_NAME = "day8_input.txt"
-FILE_NAME = "testinput_8.txt"
+FILE_NAME = "day8_input.txt"
+#FILE_NAME = "testinput_8.txt"
 
 def findbadinstruction(all_instruction_list):
     """
     findbadinstruction
     takes the instruction list as input
-    iterates through the list changing 1 instruction list 
+    iterates through the list changing 1 instruction list
     one at a time (jmp --> nop) (nop --> jmp)
     until you run through to the end of the list
-    
+
     returns the value of the accumulator (int)
     and the changed instruction as an FYI (string)
     """
-    accumulator_return = 0
     modification_str = ''
     current_instruction = 0
     original_instruction = []
@@ -55,11 +54,11 @@ def findbadinstruction(all_instruction_list):
         elif original_instruction[0] == 'jmp':
             changed_instruction[0] = 'nop'
             all_instruction_list[current_instruction] = changed_instruction
-        instruction_return = [0,0]
+        instruction_return = [0, 0]
         instruction_return = runinstructions(all_instruction_list)
         all_instruction_list[current_instruction] = original_instruction[:] #change back
         if instruction_return[1] == last_instruction: #made it to the end
-            modification_str = 'changed line ' + str(current_instruction) 
+            modification_str = 'changed line ' + str(current_instruction)
             return [instruction_return[0], modification_str]
         current_instruction = current_instruction + 1
     modification_str = 'error'
@@ -77,7 +76,6 @@ def runinstructions(all_instructions_list):
         the last run instruction (int current_instruction)
     """
     return_value = 0
-    #initial instruction tracker-can only run once
     instruction_tracker = [0] * len(all_instructions_list)
     second_call = False #was an instruction called twice
     current_instruction = 0
@@ -129,8 +127,8 @@ def main():
     reader.close
     boot_code = []
     acc_value = 0
-    last_inst = 0
-    instruction_return = [0,0]
+#    last_inst = 0
+    instruction_return = [0, 0]
     boot_code = parsecode(all_lines)
     instruction_return = runinstructions(boot_code)
     acc_value = instruction_return[0]
@@ -138,8 +136,8 @@ def main():
     msg = 'Accumulator Value on early exit: ' + str(acc_value)
     print(msg)
     msg = 'Accumulator value full run: ' + str(instruction_return[0])
-    print (msg)
-    print (instruction_return[1])
+    print(msg)
+    print(instruction_return[1])
 
 
 #call the main function
