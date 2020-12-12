@@ -20,8 +20,8 @@ what value is in the accumulator?
 """
 
 # "Globals"
-#FILE_NAME = "day7_input.txt"
-FILE_NAME = "testinput_8.txt"
+FILE_NAME = "day8_input.txt"
+#FILE_NAME = "testinput_8.txt"
 
 
 def removebag(bagstr):
