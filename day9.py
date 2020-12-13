@@ -110,7 +110,7 @@ def find_number_list(all_number_list, target_sum):
     while current_listitem < last_item:
         list_sum = 0
 #        list_end = 0
-        iterator = current_listitem + 1 
+        iterator = current_listitem + 1
         number_list = list(range(current_listitem, last_item))
         for iterator in number_list:
             list_sum = list_sum + all_number_list[iterator]
