@@ -33,7 +33,7 @@ def find_number_dif(all_number_list, target_dif):
     return_value = 0
     current_listitem = 0
     last_item = len(all_number_list)
-    while current_listitem < last_item:
+    while current_listitem < last_item-1:
         if all_number_list[current_listitem] + target_dif == all_number_list[current_listitem+1]:
             return_value += 1
         current_listitem += 1 #increment by 1
@@ -66,7 +66,12 @@ def main():
     number_list = []
     number_list = parselines(all_lines)
     # sort from lowest to highest
+    # add the "zero" adapter for charging outlet BEFORE you sort
+    number_list.append(0)
     number_list.sort()
+    # add the "built in adapter" of HIGH DIF AFTER you sort
+    number_list.append(number_list[len(number_list)-1]+HIGH_DIF)
+
     low_difference = find_number_dif(number_list, LOW_DIF)
     high_difference = find_number_dif(number_list, HIGH_DIF)
     product_difference = low_difference * high_difference
