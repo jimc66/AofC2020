@@ -42,7 +42,7 @@ def pathfinder(all_number_list, iterator):
     if iterator in PATH_DICT:
         return PATH_DICT[iterator] # so it doesn't run forever
     return_value = 0
-    for looper in range(iterator+1,len(all_number_list)):
+    for looper in range(iterator + 1, len(all_number_list)):
         if all_number_list[looper] - all_number_list[iterator] <= HIGH_DIF:
             return_value += pathfinder(all_number_list, looper)
     PATH_DICT[iterator] = return_value
