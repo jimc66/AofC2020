@@ -13,8 +13,8 @@ What is the total number of distinct ways you can arrange
 the adapters to connect the charging outlet to your device?
 
 approach:
-combinations from each postition
-
+combinations from each postition by recursively calling function
+pathfinder. add to a global dict to save time when recursively calling
 
 """
 
