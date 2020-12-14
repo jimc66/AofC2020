@@ -19,9 +19,8 @@ combinations from each postition
 """
 
 # "Globals"
-#FILE_NAME = "day10_input.txt"
-#from os import O_APPEND
-FILE_NAME = "testinput_10.txt"
+FILE_NAME = "day10_input.txt"
+#FILE_NAME = "testinput_10.txt"
 LOW_DIF = 1
 HIGH_DIF = 3
 PATH_DICT = {}
@@ -100,7 +99,7 @@ def main():
     number_list.sort()
     # add the "built in adapter" of HIGH DIF AFTER you sort
     number_list.append(number_list[len(number_list)-1]+HIGH_DIF)
-    print(number_list)
+#    print(number_list)
     low_difference = find_number_dif(number_list, LOW_DIF)
     high_difference = find_number_dif(number_list, HIGH_DIF)
     product_difference = low_difference * high_difference
