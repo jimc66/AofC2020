@@ -58,34 +58,23 @@ def seats_searcher(all_seat_list, seatrow, seatcol, rowinc, colinc):
     """
     found_seat = FLOOR #default return
     #figure out the row boundaries
-    if rowinc < 0:
-        seatrowend = -1 #see if this is off
-    elif rowinc == 0:
-        seatrowend = seatrow + 1 #to allow to loop once
-    else:
-        seatrowend = len(all_seat_list) -1 #check for off by one
-    #figure out the column boundaries
-    if colinc < 0:
-        seatcolend = 0 #see if this is off
-    elif colinc == 0:
-        seatcolend = seatcol + 1 #to allow to loop once / no increment as we are checking the row
-    else:
-        seatcolend = len(all_seat_list[seatrow]) - 1
-    if rowinc == 0:
-        rowinc = 1 #so it loops one time for staying on same row
-    if colinc == 0:
-        colinc = 1 #col loop one time too
-    for row in range(seatrow + rowinc, seatrowend, rowinc): #skip the seat you are in with the +rowinc
-        for col in range(seatcol + colinc, seatcolend, colinc): #skip the seat you are in +colinc
-            if all_seat_list[row][col] == OCC_SEAT:
-                found_seat = OCC_SEAT
-                return found_seat
-            elif all_seat_list[row][col] == EMPTY_SEAT:
-                found_seat = EMPTY_SEAT
-                return found_seat
-                # if you keep finding floor, roll through to the end
-    return found_seat
+    if rowinc == 0 and colinc == 0:
+        return found_seat #make current seat a blank / floor spot
 
+    r = seatrow + rowinc
+    c = seatcol + colinc
+    while (r > -1 and r < len(all_seat_list) and c > -1 and c < len(all_seat_list[seatrow])):
+        if all_seat_list[r][c] == OCC_SEAT:
+            found_seat = OCC_SEAT
+            return found_seat
+        elif all_seat_list[r][c] == EMPTY_SEAT:
+            found_seat = EMPTY_SEAT
+            return found_seat
+        r += rowinc
+        c += colinc   
+    return found_seat #out of bounds (off the grid) cases will fall through and return FLOOR
+   
+ 
 def seatok(all_seat_list, seatrow, seatcol):
     """
     seatok
@@ -116,7 +105,7 @@ def seatok(all_seat_list, seatrow, seatcol):
 
     # now that we have a count of occupied seats, figure out what to do
     if all_seat_list[seatrow][seatcol] == OCC_SEAT:
-        if occ_seats > 5: # including the current seat
+        if occ_seats > 4: # 5 or more
             return_value = False
     else: #not occupied
         if occ_seats == 0: #all adjacent also empty
@@ -136,7 +125,7 @@ def check_all_seats(all_seat_list):
     """
     return_value = []
     return_value = copy.deepcopy(all_seat_list) # for now
-    current_listitem = 0
+    current_listitem = 0 #current_listitem is also the column for all_seat_list
     last_item = len(all_seat_list)
     while current_listitem < last_item:
         for col_iterator in range(len(all_seat_list[current_listitem])):
@@ -178,7 +167,7 @@ def parselines(all_lines):
     for line in all_lines:
         if len(line) > 0: # this line has data on it
             single_line = list(line)
-            all_lines_list.append(single_line)
+            all_lines_list.append(single_line.copy())
             single_line.clear()
     return all_lines_list
 
