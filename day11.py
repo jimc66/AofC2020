@@ -32,8 +32,8 @@ the rule change for occupied seats becoming empty after 5 or more
 """
 import copy
 # "Globals"
-#FILE_NAME = "day11_input.txt"
-FILE_NAME = "testinput_11.txt"
+FILE_NAME = "day11_input.txt"
+#FILE_NAME = "testinput_11.txt"
 OCC_SEAT = '#'
 EMPTY_SEAT = 'L'
 FLOOR = '.'
@@ -61,20 +61,20 @@ def seats_searcher(all_seat_list, seatrow, seatcol, rowinc, colinc):
     if rowinc == 0 and colinc == 0:
         return found_seat #make current seat a blank / floor spot
 
-    r = seatrow + rowinc
-    c = seatcol + colinc
-    while (r > -1 and r < len(all_seat_list) and c > -1 and c < len(all_seat_list[seatrow])):
-        if all_seat_list[r][c] == OCC_SEAT:
+    row = seatrow + rowinc
+    col = seatcol + colinc
+    while (row > -1 and row < len(all_seat_list) and col > -1 and col < len(all_seat_list[seatrow])):
+        if all_seat_list[row][col] == OCC_SEAT:
             found_seat = OCC_SEAT
             return found_seat
-        elif all_seat_list[r][c] == EMPTY_SEAT:
+        elif all_seat_list[row][col] == EMPTY_SEAT:
             found_seat = EMPTY_SEAT
             return found_seat
-        r += rowinc
-        c += colinc   
+        row += rowinc
+        col += colinc
     return found_seat #out of bounds (off the grid) cases will fall through and return FLOOR
-   
- 
+
+
 def seatok(all_seat_list, seatrow, seatcol):
     """
     seatok
