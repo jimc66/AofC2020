@@ -25,8 +25,8 @@ challenge number 2
 """
 #import copy
 # "Globals"
-#FILE_NAME = "day12_input.txt"
-FILE_NAME = "testinput_12.txt"
+FILE_NAME = "day12_input.txt"
+#FILE_NAME = "testinput_12.txt"
 CURRENT_DIR = 90 #0-North 90-East 180-South 270-West
 NORTH_SOUTH = 0
 EAST_WEST = 0
@@ -71,10 +71,10 @@ def navigate(item):
             EAST_WEST += direction
         elif CURRENT_DIR == 270:
             EAST_WEST -= direction
-        if CURRENT_DIR > 360:
-            CURRENT_DIR -= 360
-        elif CURRENT_DIR < 0:
-            CURRENT_DIR += 360
+    if CURRENT_DIR >= 360:
+        CURRENT_DIR -= 360
+    elif CURRENT_DIR < 0:
+        CURRENT_DIR += 360
     return
 
 def parselines(all_lines):
