@@ -43,8 +43,8 @@ def navigate(item):
     EAST_WEST
     """
     global CURRENT_DIR #0-North 90-East 180-South 270-West
-    global NORTH_SOUTH 
-    global EAST_WEST 
+    global NORTH_SOUTH
+    global EAST_WEST
     if item[0] == 'S':
         NORTH_SOUTH -= item[1]
     elif item[0] == 'N':
@@ -56,7 +56,7 @@ def navigate(item):
     elif item[0] == 'R':
         CURRENT_DIR += item[1]
     elif item[0] == 'L':
-        CURRENT_DIR -= item[1]        
+        CURRENT_DIR -= item[1]
     # forward and reverse
     elif item[0] == 'F' or item[0] == 'R':
         if item[0] == 'R':
